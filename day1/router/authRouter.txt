@@ -1,0 +1,9 @@
+const express=require("express");
+const { signup } = require("../controller/authController");
+const authRouter=express.Router();
+
+// post method ka use ham data ko  securly  access , aur create  karne ke liye bhi kiya jata.
+//signup per hit karne ke bad kya karna hai second parameter o likha gaya hai.
+authRouter.post('/signup', signup )
+
+module.exports=authRouter;
