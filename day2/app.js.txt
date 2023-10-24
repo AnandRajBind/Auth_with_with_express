@@ -1,0 +1,21 @@
+
+// create express server 
+const express =require ('express');
+const databaseconnect = require('./config/databaseConfig.js');
+const app=express();//server instance 
+// import auth router 
+const authRouter=require('./router/authRoute.js');
+
+// database connection.
+databaseconnect();
+
+
+app.use(express.json());
+app.use('/api/auth',authRouter)
+// route 
+app.use('/',(req, res)=>{
+res.status(200).json({data:'JWTauth server kjhkjhkh --updated '});
+
+})
+// app server ko  export kiya gaya hai tki ham kisi aaur file me app server ko impoert kar sake.
+module.exports=app;  
