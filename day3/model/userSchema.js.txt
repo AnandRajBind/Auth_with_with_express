@@ -1,0 +1,59 @@
+// mongoose ke through hame schema create karne ki capability milti hai 
+const mongoose=require('mongoose');
+const JWT=require('jsonwebtoken');
+const bcrypt= require('bcrypt');
+
+const {Schema}=mongoose;
+
+const userSchema=new Schema({
+name:{
+    type:String,
+    requir:[true,'user name is Required'],
+    minLength:[5,"Name must be at least 5 char "],
+    maxLength:[50,"Name must be less than  50 char "],
+trim:true,
+
+},
+email:{
+    type: String,
+    required:[true, 'user email is required'],
+    unique:true,
+    lowercase:true,
+    unique:[true,'already registerd'],
+},
+password:{
+    type: String,
+},
+forgotPassowrdToken:{
+    type: String
+},
+forgotPasswordExpairyDate:{
+    type:Date
+}
+},{
+timestamps:true
+});
+//  encription of the password 
+userSchema.pre('save',async function(){
+    if(!this.isModified('password')){
+        return next();
+    }
+    this.password=await bcrypt.has(this.password, 10);
+    return next();
+})
+
+// generate jwt Token
+userSchema.methods={
+    jwtToken(){
+return  JWT.sign(
+    { id: this._id, email: this.email},
+    process.env.SECRET,
+    {expiresIn: '24h'}
+)
+
+    }
+}
+
+
+const userModel=mongoose.model('user', userSchema);
+module.exports=userModel;
